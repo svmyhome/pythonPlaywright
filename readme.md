@@ -18,3 +18,8 @@ playwright codegen --viewport-size=800,600 https://demo.playwright.dev/todomvc/#
 ```bash
 playwright codegen -o example_lesson.py https://demo.playwright.dev/todomvc/#/
 ```
+
+Запуск в режиме headed, передайте параметр, как показано ниже. 
+```bash
+pytest --headed
+```
