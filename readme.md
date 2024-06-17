@@ -68,3 +68,148 @@ pytest --headed --device="iPhone 13 Mini" --screenshot=on
 ```bash
 pytest --headed --device="iPhone 13 Mini" --screenshot=on --full-page-screenshot
 ```
+
+### Locators
+
+ID
+```python
+page.locator("#new-todo").click()
+page.locator("//*[@id='new-todo']").click()
+```
+
+Class
+```python
+page.locator(".new-todo").click()
+page.locator("//*[@class='new-todo']").click()
+
+page.locator("css=.first-class.another-class").click()
+page.locator("xpath=//div[contains(@class, 'first-class') and contains(@class, 'another-class')]").click()
+```
+
+Attributes
+```python
+page.locator("[placeholder='Your email address']").click()
+page.locator("//*[@placeholder='Your email address']").click()
+```
+
+Combinators
+
+descendant
+```python
+page.locator(".container p").click()
+```
+
+child
+```python
+page.locator(".container > p").click()
+```
+
+Pseudoclasses
+
+```python
+page.locator("td:right-of(td p:text('Software engineer'))")
+page.locator("td:left-of(td p:text('Software engineer'))")
+page.locator("td:above(td p:text('Consultant'))")
+page.locator("td:below(td p:text('Consultant'))")
+page.locator("td:near(td p:text('Consultant'))")
+page.locator("td:below(td p:text('Software engineer'), 100)")
+```
+
+conditions
+
+```python
+page.locator('button:has-text("Log in"), button:has-text("Sign in")').click()
+```
+
+N element
+```python
+page.locator("button").locator("nth=0").click()
+page.locator("button").locator("nth=-1").click()
+```
+
+Only visible
+```python
+page.locator('div:has-text("Card")').click()
+```
+
+get_by_*
+
+```python
+page.get_by_text("switch checkbox").click()
+page.get_by_text("switch checkbox",exact=True).click()
+
+page.get_by_label("Email address").fill("qa@example.com")
+
+page.get_by_placeholder("password")
+
+page.get_by_test_id('todo-title').click()
+
+page.get_by_alt_text('logo').click()
+
+page.get_by_title("username").fill("Anton")
+
+page.get_by_role("button", name="Submit").click()
+```
+
+locator.or_
+
+```python
+def test_or(page):
+    selector = page.locator("input").or_(page.locator("text"))
+    selector.fill("Hello Stepik")
+
+def test_locator_and(page):
+    page.goto("https://zimaev.github.io/locatorand/")
+    selector = page.get_by_role("button", name="Sing up").and_(page.get_by_title("Sing up today"))
+    selector.click()
+```
+
+locator chain
+
+```python
+page.locator("#navbarNavDropdown >> li:has-text('Company')").click()
+```
+
+or
+
+```python
+nav_bar = page.locator('div#navbarNavDropdown')
+nav_bar.locator("li:has-text('Company')").click()
+```
+
+Filtration
+
+```python
+page.locator("li").filter(has_text='Company').click()
+
+page.locator('li').filter(has=page.locator('.dropdown-toggle')).click()
+
+row_locator.filter(has_not=page.get_by_role("button")).count()
+
+row_locator.filter(has_not_text="helicopter")
+
+row_locator
+    .filter(has_text="text in column 1")
+    .filter(has=page.get_by_role("button", name="column 2 button"))
+    .click()
+
+```
+
+Several elements
+количество элементов, соответствующих указанному селектору
+```python
+page.get_by_role("button").count()
+```
+Для того чтобы взаимодействовать с конкретным элементом из списка, используйте метод nth() с указанием индекса нужного вам элемента. Указывается именно индекс, а не порядковый номер, по этому счет ведется с 0-го индекса. nth(0)выбирает первый элемент. Учитывайте это при выборе элемента.
+```python
+page.get_by_role("listitem").nth(1)
+```
+locator.first, locator.last
+
+locator.all() 
+```python
+page.goto('https://zimaev.github.io/checks-radios/')
+checkboxes = page.locator("input")
+for checkbox in checkboxes.all():
+    checkbox.check()
+```
