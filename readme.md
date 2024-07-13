@@ -280,6 +280,78 @@ playwright.inspect('input')
 ```
 
 
+### Перехват и изменение сетевых запросов
+
+Чтобы начать прослушивать сеть, необходимо дать команду слушать события request и response и обрабатывать их
+
+```python
+def test_listen_network(page: Page):
+    page.on("request", lambda request: print(">>", request.method, request.url))
+    page.on("response", lambda response: print("<<", response.status, response.url))
+    page.goto('https://osinit.ru/')
+```
+### Модифицировать запрос
+
+```python
+page.route("**/*.{png,jpg,jpeg}", lambda route: route.abort())
+```
+page.route  - функция позволяющая обрабатывать сетевые запросы. В отличие от page.on метод route может изменять сетевые запросы и ответы
+
+**/*.{png,jpg,jpeg} -  шаблон url для соответствия маршрутизации. В качестве шаблона можно использовать RegExp, либо целый url.
+
+lambda route: route.abort() -  это функция обработчик для маршрутизируемых запросов. Встроенный в playwright метод route.abort()прерывает запрос по маршруту.
+
+Для изменения передаваемых данных используется метод  route.continue_  и аргументом post_data
+```python
+def test_network(page):
+    page.route("**/register", lambda route: route.continue_(post_data='{"email": "user","password": "secret"}'))
+    page.goto('https://reqres.in/')
+    page.get_by_text(' Register - successful ').click()
+```
+
+Для подмены ответа от сервера используется метод route.fulfill можно через файл или поймать ответ
+```python
+def test_mock_tags(page):
+    page.route("**/api/tags", lambda route: route.fulfill(path="data.json"))
+    page.goto('https://demo.realworld.io/')
+```
+route.fetch выполняет запрос на сервер и получает результат на данный запрос
+```python
+def test_intercepted(page: Page):
+    def handle_route(route: Route):
+        response = route.fetch()
+        json = response.json()
+        json["tags"] = ["open", "solutions"]
+        route.fulfill(json=json)
+
+    page.route("**/api/tags", handle_route)
+
+    page.goto("https://demo.realworld.io/")
+    sidebar = page.locator('css=div.sidebar') 
+    expect(sidebar.get_by_role('link')).to_contain_text(["open", "solutions"])
+```
+
+### Работа с HAR файлами
+
+#### Запись HAR с помощью CLI
+
+```bash
+playwright open --save-har=example.har --save-har-glob="**/api/**" https://reqres.in
+```
+--save-har-glob="**/api/**"  -- сохраняет только интересующие запросы только эндпонитов API. 
+Редактируем полученный HAR файл, в том месте где сам запрос
+![img_4.png](img_4.png)
+```python
+def test_replace_from_har(page):
+    page.goto("https://reqres.in/")
+    page.route_from_har("../example.har")
+    users_single = page.locator('li[data-id="users-single"]')
+    users_single.click()
+    response = page.locator('[data-key="output-response"]')
+    expect(response).to_contain_text("Voldemar")
+```
+
+
 
 В качестве закрепления полученных знаний и получения практических навыков используйте следующие тестовые сайты
 
