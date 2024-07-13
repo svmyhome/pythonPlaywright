@@ -1,9 +1,6 @@
-import re
-from playwright.sync_api import Playwright, sync_playwright, expect
-
-
-def test_add_todo(page):
+def test_screenshot_todo(page):
     page.goto("https://demo.playwright.dev/todomvc/#/")
+    page.screenshot(path='./screen/screenshot.png')
     page.get_by_placeholder("What needs to be done?").click()
     page.get_by_placeholder("What needs to be done?").fill("first task")
     page.get_by_placeholder("What needs to be done?").press("Enter")
@@ -11,11 +8,13 @@ def test_add_todo(page):
     page.get_by_placeholder("What needs to be done?").press("Enter")
     page.get_by_placeholder("What needs to be done?").fill("third task")
     page.get_by_placeholder("What needs to be done?").press("Enter")
+    page.screenshot(path='./screen/screenshot1.png', full_page=True)
     page.locator("li").filter(has_text="second task").get_by_label("Toggle Todo").check()
 
 
-def test_add_todo_with_new_size(page):
+def test_screenshot_area_todo(page):
     page.goto("https://demo.playwright.dev/todomvc/#/")
+    page.screenshot(path='./screen/screenshot.jpg', type='jpeg', quality=80)
     page.get_by_placeholder("What needs to be done?").click()
     page.get_by_placeholder("What needs to be done?").fill("first task")
     page.get_by_placeholder("What needs to be done?").press("Enter")
@@ -23,4 +22,19 @@ def test_add_todo_with_new_size(page):
     page.get_by_placeholder("What needs to be done?").press("Enter")
     page.get_by_placeholder("What needs to be done?").fill("third task")
     page.get_by_placeholder("What needs to be done?").press("Enter")
+    page.screenshot(path='./screen/clipped_image.png', clip={"x": 600, "y": 100, "width": 700, "height": 400})
+    page.locator("li").filter(has_text="second task").get_by_label("Toggle Todo").check()
+
+
+def test_timeout_webelement_area_todo(page):
+    page.goto("https://demo.playwright.dev/todomvc/#/")
+    page.screenshot(path='./screen/screenshot.jpg', type='jpeg', quality=80)
+    page.get_by_placeholder("What needs to be done?").click()
+    page.get_by_placeholder("What needs to be done?").fill("first task")
+    page.get_by_placeholder("What needs to be done?").press("Enter")
+    page.get_by_placeholder("What needs to be done?").fill("second task")
+    page.get_by_placeholder("What needs to be done?").press("Enter")
+    page.get_by_placeholder("What needs to be done?").fill("third task")
+    page.get_by_placeholder("What needs to be done?").press("Enter")
+    page.get_by_text('first task').screenshot(path='./screen/web_element.png', timeout=10000)
     page.locator("li").filter(has_text="second task").get_by_label("Toggle Todo").check()

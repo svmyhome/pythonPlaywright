@@ -53,6 +53,10 @@ pytest --headed --device="iPhone 13 Mini" --output=results
 ```bash
 pytest --headed --device="iPhone 13 Mini" --output=results --tracing=on
 ```
+Просмотр трасировки 
+```bash
+playwright show-trace trace.zip
+```
 
 Записывать ли видео для каждого теста. on, off или retain-on-failure (по умолчанию: off)
 ```bash
@@ -213,3 +217,144 @@ checkboxes = page.locator("input")
 for checkbox in checkboxes.all():
     checkbox.check()
 ```
+
+### Screenshot
+
+скриншот
+```python
+page.screenshot(path="screenshot.png")
+```
+
+Скриншот всей страницы
+```python
+page.screenshot(path="screenshot.png", full_page=True)
+```
+
+Задает формат изображения. Доступные варианты включают 'jpeg' и 'png'. По умолчанию 'png'.
+```python
+page.screenshot(path="example.jpeg", type="jpeg")
+```
+
+ Качество сжатия изображения для формата 'jpeg'. Должно быть число от 0 до 100. По умолчанию не определено.
+```python
+page.screenshot(path="example.jpeg", type="jpeg", quality=80)
+```
+
+Задает область для создания скриншота, указав координаты x, y, ширину и высоту. 
+```python
+page.screenshot(path="clipped_image.png", clip={"x": 50, "y": 0, "width": 400, "height": 300})
+```
+
+Задает максимальное время ожидания (в миллисекундах) перед созданием скриншота. Установите значение как "0", чтобы ждать неограниченное время. По умолчанию 30000 миллисекунд (30 секунд).
+```python
+page.screenshot(path="timeout_example.png", timeout=10000)
+```
+
+### PWDEBUG и Playwright Inspector
+
+Запуск теста в Playwright Inspector в режиме дебаг, перед тестовой командой префикс PWDEBUG=1
+```bash
+PWDEBUG=1 pytest -k 'test_todo'
+```
+
+Можно так же в коде использовать
+```python
+page.pause()
+```
+
+После запуска в режиме отладки можно в console искать локаторы
+![img.png](img.png)
+![img_2.png](img_2.png)
+
+Для того чтобы искать элементы используя селекторы css и xpath
+```
+playwright.$(selector): выделяет первое вхождение селектора.
+playwright.$$(селектор): выделяет все вхождения селектора. 
+```
+![img_3.png](img_3.png)
+
+переместит во вкладу элементы и отобразит данный селектор в DOM
+```
+playwright.inspect(selector)
+playwright.inspect('input')
+```
+
+
+
+В качестве закрепления полученных знаний и получения практических навыков используйте следующие тестовые сайты
+
+ 
+
+Чек-боксы и переключатели
+https://webdriveruniversity.com/Dropdown-Checkboxes-RadioButtons/index.html
+
+https://the-internet.herokuapp.com/checkboxes
+
+https://demoqa.com/checkbox
+
+https://demoqa.com/radio-button
+
+ 
+
+Выпадающий список
+https://the-internet.herokuapp.com/dropdown
+
+ 
+Кнопки
+https://demoqa.com/buttons
+
+https://letcode.in/buttons
+
+ 
+
+Загрузка и скачивание  
+https://demoqa.com/upload-download
+
+https://practice-automation.com/file-download/
+
+https://practice-automation.com/file-upload/
+
+ 
+
+Всплывающие окна и алерты
+https://webdriveruniversity.com/Popup-Alerts/index.html
+
+https://demoqa.com/modal-dialogs
+
+https://practice-automation.com/popups/
+
+ 
+
+Таблицы
+https://the-internet.herokuapp.com/tables
+
+https://demoqa.com/webtables
+
+http://uitestingplayground.com/dynamictable
+
+ 
+
+Авторизация
+https://the-internet.herokuapp.com/login
+
+https://webdriveruniversity.com/Login-Portal/index.html
+
+ 
+
+Заполнение форм 
+https://webdriveruniversity.com/Contact-Us/contactus.html
+
+https://demoqa.com/automation-practice-form
+
+https://practice-automation.com/form-fields/
+
+https://letcode.in/edit
+
+https://www.globalsqa.com/samplepagetest/
+
+ 
+
+Тестовые сайты
+https://www.saucedemo.com/
+
+https://demo.applitools.com/
