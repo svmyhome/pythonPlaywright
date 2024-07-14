@@ -351,6 +351,29 @@ def test_replace_from_har(page):
     expect(response).to_contain_text("Voldemar")
 ```
 
+### Тестирвоание АПИ
+
+```python
+def test_add_user(page):
+    data = [
+              {
+                "id": 9743,
+                "username": "fsd",
+                "firstName": "fff",
+                "lastName": "ggg",
+                "email": "bbb",
+                "password": "tt",
+                "phone": "333",
+                "userStatus": 0
+              }
+            ]
+    header = {
+        'accept': 'application/json',
+        'content-Type': 'application/json'
+    }
+    response = page.request.post('https://petstore.swagger.io/v2/user/createWithArray',data=data, headers=header)
+    print(response.status)
+```
 
 
 В качестве закрепления полученных знаний и получения практических навыков используйте следующие тестовые сайты
